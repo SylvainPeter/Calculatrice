@@ -1,4 +1,4 @@
-<!-- Calculatrice Simplifiée, by Sylvain Peter, 2020 -->
+<!-- Calculatrice Simplifiée, by Sylvain Peter, 2022 -->
 <!doctype html>
 <html>
 
@@ -8,27 +8,150 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Calculatrice Simplifiée</title>
     <script src="https://unpkg.com/vue@2.6.12/dist/vue.min.js"></script>
-    <link rel=stylesheet href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <style>
+        #app {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-size: 1.2em;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        #calculator {
+            width: 200px;
+            background-color: #F6E9F8;
+            box-shadow: 6px 6px 8px lightgrey;
+        }
+
+        .operator {
+            background-color: #ff69b4;
+            color: white;
+            width: 55px;
+            height: 48px;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            box-shadow: 2px 2px 3px lightgrey, -2px -2px 3px white;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .operator:hover {
+            background-color: #ff8cba;
+        }
+
+        .operator:focus {
+            background-color: #ffb6c1;
+        }
+
+        .final {
+            background-color: #F9F0C0;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 1.2em;
+            box-shadow: 2px 2px 3px lightgrey, -2px -2px 3px white, inset 2px 2px 3px lightgrey, inset -2px -2px 3px white;
+        }
+
+        fieldset {
+            background-color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 6px 6px 8px lightgrey, -6px -6px 8px white;
+        }
+
+        legend {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: black;
+        }
+
+        input[type="number"] {
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 1.2em;
+            box-shadow: 2px 2px 3px lightgrey, -2px -2px 3px white;
+            /* couleur du texte */ color: #555;
+        }
+
+        #result {
+            background-color: #ff69b4;
+            width: 55px;
+            height: 48px;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 2px 2px 3px lightgrey, -2px -2px 3px white;
+        }
+
+        #result:disabled {
+            background-color: #ccc;
+            cursor: default;
+        }
+    </style>
 </head>
 
 <body>
     <div id="app">
         <fieldset id="calculator">
             <legend><strong>Calculatrice Simplifiée</strong></legend>
-            <p><input type="number" title="entrez le premier chiffre" v-model.number="firstNumber"></p>
+            <p><input type="number" placeholder="entrez le premier chiffre" v-model.number="firstNumber"></p>
             <button class="operator" title="additionner" @click="operatorName = '+'">+</button>
             <button class="operator" title="soustraire" @click="operatorName = '-'">-</button>
             <button class="operator" title="multiplier" @click="operatorName = '*'">*</button>
             <button class="operator" title="diviser" @click="operatorName = '/'">/</button>
-            <p><input type="number" title="entrez le second chiffre" v-model.number="secondNumber"></p>
+            <p><input type="number" placeholder="entrez le second chiffre" v-model.number="secondNumber"></p>
             <button id="result" disabled>=</button>
-            <p><input v-if="operatorName =='+'" type="text" title="total" :value="totalAddition" class="final" disabled></p>
-            <p><input v-if="operatorName =='-'" type="text" title="total" :value="totalSubstraction" class="final" disabled></p>
-            <p><input v-if="operatorName =='*'" type="text" title="total" :value="totalMultiplication" class="final" disabled></p>
-            <p><input v-if="operatorName =='/'" type="text" title="total" :value="totalDivision" class="final" disabled></p>
+            <p><input v-if="operatorName =='+'" type="text" title="total" :value="totalAddition" class="final" disabled>
+            </p>
+            <p><input v-if="operatorName =='-'" type="text" title="total" :value="totalSubstraction" class="final"
+                    disabled></p>
+            <p><input v-if="operatorName =='*'" type="text" title="total" :value="totalMultiplication" class="final"
+                    disabled></p>
+            <p><input v-if="operatorName =='/'" type="text" title="total" :value="totalDivision" class="final" disabled>
+            </p>
         </fieldset>
     </div>
-    <script src="main.js"></script>
+    <script>
+        const app = new Vue({
+            el: '#app',
+            data: {
+                firstNumber: null,
+                secondNumber: null,
+                operatorName: '+'
+            },
+            computed: {
+                totalAddition() {
+                    return this.firstNumber + this.secondNumber
+                },
+                totalSubstraction() {
+                    return this.firstNumber - this.secondNumber
+                },
+                totalMultiplication() {
+                    return this.firstNumber * this.secondNumber
+                },
+                totalDivision() {
+                    return this.firstNumber / this.secondNumber
+                }
+            }
+        })
+    </script>
 </body>
 
 </html>

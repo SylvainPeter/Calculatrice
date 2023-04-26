@@ -138,7 +138,7 @@
                 <button class="operator" title="diviser" @click="operatorName = '/'">/</button>
             </div>
             <div id="reset-container">
-                <button id="reset" @click="resetValues">C</button>
+                <button id="reset" title="reset" @click="resetValues">C</button>
             </div>
             <p><input v-if="operatorName =='+'" type="text" title="total" :value="totalAddition" class="final" disabled>
             </p>

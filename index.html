@@ -10,6 +10,11 @@
     <script src="https://unpkg.com/vue@2.6.12/dist/vue.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
     <style>
+        @font-face {
+            font-family: 'LiquidCrystal';
+            src: url("/fonts/LiquidCrystal-Normal.otf");
+        }
+
         #app {
             display: flex;
             justify-content: center;
@@ -20,46 +25,13 @@
         body {
             margin: 0;
             padding: 0;
-            font-size: 1.2em;
+            font-size: 1.3em;
             font-family: 'Roboto', sans-serif;
         }
 
         #calculator {
-            width: 200px;
             background-color: #F6E9F8;
             box-shadow: 6px 6px 8px lightgrey;
-        }
-
-        .operator {
-            background-color: #ff69b4;
-            color: white;
-            width: 55px;
-            height: 48px;
-            border: none;
-            padding: 10px 20px;
-            margin: 5px;
-            border-radius: 5px;
-            box-shadow: 2px 2px 3px lightgrey, -2px -2px 3px white;
-            font-size: 1.2em;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-        }
-
-        .operator:hover {
-            background-color: #ff8cba;
-        }
-
-        .operator:focus {
-            background-color: #ffb6c1;
-        }
-
-        .final {
-            background-color: #F9F0C0;
-            border: none;
-            border-radius: 5px;
-            padding: 10px;
-            font-size: 1.2em;
-            box-shadow: 2px 2px 3px lightgrey, -2px -2px 3px white, inset 2px 2px 3px lightgrey, inset -2px -2px 3px white;
         }
 
         fieldset {
@@ -77,18 +49,59 @@
         }
 
         input[type="number"] {
+            font-family: "LiquidCrystal";
             border: none;
             border-radius: 5px;
             padding: 10px;
+            margin-left: 10px;
             font-size: 1.2em;
             box-shadow: 2px 2px 3px lightgrey, -2px -2px 3px white;
-            /* couleur du texte */ color: #555;
+            /* couleur du texte */
+            color: #555;
         }
 
-        #result {
+        ::placeholder {
+            font-size: 95%;
+            opacity: 0.8;
+        }
+
+        #operators-container {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .operator {
             background-color: #ff69b4;
+            color: white;
             width: 55px;
             height: 48px;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            margin-left: 6px;
+            border-radius: 5px;
+            box-shadow: 2px 2px 3px lightgrey, -2px -2px 3px white;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .operator:hover {
+            background-color: #ff8cba;
+        }
+
+        .operator:focus {
+            background-color: #ffb6c1;
+        }
+
+        #reset-container {
+            padding: 15px 5px 0 5px;
+        }
+        
+        #reset {
+            width: 55px;
+            height: 48px;
+            background-color: #bdbdbd;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -96,13 +109,18 @@
             border-radius: 5px;
             font-size: 1.2em;
             cursor: pointer;
-            transition: all 0.2s ease-in-out;
             box-shadow: 2px 2px 3px lightgrey, -2px -2px 3px white;
         }
 
-        #result:disabled {
-            background-color: #ccc;
-            cursor: default;
+        .final {
+            font-family: "LiquidCrystal";
+            background-color: #F9F0C0;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            margin-left: 10px;
+            font-size: 1.2em;
+            box-shadow: 2px 2px 3px lightgrey, -2px -2px 3px white, inset 2px 2px 3px lightgrey, inset -2px -2px 3px white;
         }
     </style>
 </head>
@@ -111,13 +129,17 @@
     <div id="app">
         <fieldset id="calculator">
             <legend><strong>Calculatrice Simplifiée</strong></legend>
-            <p><input type="number" placeholder="entrez le premier chiffre" v-model.number="firstNumber"></p>
-            <button class="operator" title="additionner" @click="operatorName = '+'">+</button>
-            <button class="operator" title="soustraire" @click="operatorName = '-'">-</button>
-            <button class="operator" title="multiplier" @click="operatorName = '*'">*</button>
-            <button class="operator" title="diviser" @click="operatorName = '/'">/</button>
-            <p><input type="number" placeholder="entrez le second chiffre" v-model.number="secondNumber"></p>
-            <button id="result" disabled>=</button>
+            <p><input type="number" placeholder="entrez premier nombre" v-model.number="firstNumber"></p>
+            <p><input type="number" placeholder="entrez second nombre" v-model.number="secondNumber"></p>
+            <div id="operators-container">
+                <button class="operator" title="additionner" @click="operatorName = '+'">+</button>
+                <button class="operator" title="soustraire" @click="operatorName = '-'">-</button>
+                <button class="operator" title="multiplier" @click="operatorName = '*'">*</button>
+                <button class="operator" title="diviser" @click="operatorName = '/'">/</button>
+            </div>
+            <div id="reset-container">
+                <button id="reset" @click="resetValues">C</button>
+            </div>
             <p><input v-if="operatorName =='+'" type="text" title="total" :value="totalAddition" class="final" disabled>
             </p>
             <p><input v-if="operatorName =='-'" type="text" title="total" :value="totalSubstraction" class="final"
@@ -148,6 +170,12 @@
                 },
                 totalDivision() {
                     return this.firstNumber / this.secondNumber
+                }
+            },
+            methods: {
+                resetValues() {
+                    this.firstNumber = 0;
+                    this.secondNumber = 0;
                 }
             }
         })
